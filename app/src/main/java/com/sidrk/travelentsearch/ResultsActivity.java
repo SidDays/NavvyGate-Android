@@ -1,12 +1,13 @@
 package com.sidrk.travelentsearch;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import com.sidrk.travelentsearch.ResultsAdapter;
 
 public class ResultsActivity extends AppCompatActivity {
+
+    private static final String TAG = "ResultsActivity";
 
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
@@ -27,7 +28,9 @@ public class ResultsActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         // specify an adapter (see also next example)
-//        mAdapter = new ResultsAdapter(myDataset);
-//        mRecyclerView.setAdapter(mAdapter);
+        //        mAdapter = new ResultsAdapter(myDataset);
+        //        mRecyclerView.setAdapter(mAdapter);
+
+
     }
 }

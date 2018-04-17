@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:padding="15dp"
     tools:context=".SearchActivity">
 
     <TextView
@@ -19,6 +20,14 @@
         android:ems="10"
         android:hint="Enter Keyword"
         android:inputType="text" />
+
+    <TextView
+        android:id="@+id/textViewKeywordError"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Please enter mandatory field"
+        android:textColor="?attr/colorError"
+        android:visibility="gone" />
 
     <TextView
         android:layout_width="match_parent"
@@ -58,6 +67,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:checked="true"
             android:text="Current location" />
 
         <RadioButton
@@ -69,18 +79,27 @@
 
     </RadioGroup>
 
+    <TextView
+        android:id="@+id/textViewOtherError"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Please enter mandatory field"
+        android:textColor="?attr/colorError"
+        android:visibility="gone" />
+
     <EditText
         android:id="@+id/editTextOther"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="32dp"
         android:ems="10"
+        android:enabled="false"
         android:inputType="textPersonName"
         android:text="Type in the location" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="horizontal">
 
         <Button
@@ -88,6 +107,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:onClick="nearbySearch"
             android:text="Search" />
 
         <Button
@@ -95,6 +115,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:onClick="clearAll"
             android:text="Clear" />
     </LinearLayout>
 

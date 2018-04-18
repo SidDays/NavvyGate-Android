@@ -4,6 +4,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -18,9 +19,14 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class SearchActivity extends AppCompatActivity {
 
     private static final String TAG = "SearchActivity";
+
+    private static final List<String> CATEGORIES = Arrays.asList("Default", "Airport", "Amusement Park", "Aquarium", "Art Gallery", "Bakery", "Bar", "Beauty Salon", "Bowling Alley", "Bus Station", "Cafe", "Campground", "Car Rental", "Casino", "Lodging", "Movie Theater", "Museum", "Night Club", "Park", "Parking", "Restaurant", "Shopping Mall", "Stadium", "Subway Station", "Taxi Stand", "Train Station", "Transit Station", "Travel Agency", "Zoo");
 
     private EditText editTextKeyword;
     private TextView textViewKeywordError;
@@ -39,7 +45,14 @@ public class SearchActivity extends AppCompatActivity {
 
         editTextKeyword = findViewById(R.id.editTextKeyword);
         textViewKeywordError = findViewById(R.id.textViewKeywordError);
+
         spinnerCategory = findViewById(R.id.spinnerCategory);
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(
+                this, android.R.layout.simple_spinner_item, CATEGORIES);
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        Spinner sItems = (Spinner) findViewById(R.id.spinnerCategory);
+        sItems.setAdapter(spinnerAdapter);
+
         editTextDistance = findViewById(R.id.editTextDistance);
         editTextOther = findViewById(R.id.editTextOther);
         radioButtonOther = findViewById(R.id.radioButtonOther);
@@ -52,6 +65,7 @@ public class SearchActivity extends AppCompatActivity {
                 switch (checkedId) {
                     case R.id.radioButtonCurrent:
                         editTextOther.setEnabled(false);
+                        textViewOtherError.setVisibility(View.GONE);
                         break;
                     case R.id.radioButtonOther:
                         editTextOther.setEnabled(true);
@@ -84,7 +98,7 @@ public class SearchActivity extends AppCompatActivity {
         String other = editTextOther.getText().toString();
         if (radioButtonOther.isChecked()) {
 
-            if(other.trim().length() == 0) {
+            if (other.trim().length() == 0) {
                 isValid = false;
                 textViewOtherError.setVisibility(View.VISIBLE);
             } else {
@@ -94,8 +108,8 @@ public class SearchActivity extends AppCompatActivity {
             textViewOtherError.setVisibility(View.GONE);
         }
 
-        if(!isValid) {
-            Toast.makeText(getApplicationContext(),"Please fix all fields with errors",Toast.LENGTH_SHORT).show();
+        if (!isValid) {
+            Toast.makeText(getApplicationContext(), "Please fix all fields with errors", Toast.LENGTH_SHORT).show();
         }
 
         return isValid;
@@ -140,5 +154,8 @@ public class SearchActivity extends AppCompatActivity {
         editTextDistance.setText("");
         radioGroupLocation.check(R.id.radioButtonCurrent);
         editTextOther.setText("");
+        textViewOtherError.setVisibility(View.GONE);
+        textViewKeywordError.setVisibility(View.GONE);
+        spinnerCategory.setSelection(0);
     }
 }

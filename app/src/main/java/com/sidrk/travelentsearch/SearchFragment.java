@@ -1,10 +1,15 @@
 package com.sidrk.travelentsearch;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -22,9 +27,12 @@ import com.android.volley.toolbox.Volley;
 import java.util.Arrays;
 import java.util.List;
 
-public class SearchActivity extends AppCompatActivity {
+/**
+ * A placeholder fragment containing a simple view.
+ */
+public class SearchFragment extends Fragment {
 
-    private static final String TAG = "SearchActivity";
+    private static final String TAG = "SearchFragment";
 
     private static final List<String> CATEGORIES = Arrays.asList("Default", "Airport", "Amusement Park", "Aquarium", "Art Gallery", "Bakery", "Bar", "Beauty Salon", "Bowling Alley", "Bus Station", "Cafe", "Campground", "Car Rental", "Casino", "Lodging", "Movie Theater", "Museum", "Night Club", "Park", "Parking", "Restaurant", "Shopping Mall", "Stadium", "Subway Station", "Taxi Stand", "Train Station", "Transit Station", "Travel Agency", "Zoo");
 
@@ -37,27 +45,39 @@ public class SearchActivity extends AppCompatActivity {
     private RadioButton radioButtonCurrent;
     private RadioButton radioButtonOther;
     private TextView textViewOtherError;
+    private Button buttonSearch;
+    private Button buttonClear;
+
+    public SearchFragment() {
+
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_search);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_search, container, false);
+        return rootView;
+    }
 
-        editTextKeyword = findViewById(R.id.editTextKeyword);
-        textViewKeywordError = findViewById(R.id.textViewKeywordError);
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
-        spinnerCategory = findViewById(R.id.spinnerCategory);
+        editTextKeyword = view.findViewById(R.id.editTextKeyword);
+        textViewKeywordError = view.findViewById(R.id.textViewKeywordError);
+
+        spinnerCategory = view.findViewById(R.id.spinnerCategory);
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(
-                this, android.R.layout.simple_spinner_item, CATEGORIES);
+                getActivity().getApplicationContext(), android.R.layout.simple_spinner_item, CATEGORIES);
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        Spinner sItems = (Spinner) findViewById(R.id.spinnerCategory);
+        Spinner sItems = (Spinner) view.findViewById(R.id.spinnerCategory);
         sItems.setAdapter(spinnerAdapter);
 
-        editTextDistance = findViewById(R.id.editTextDistance);
-        editTextOther = findViewById(R.id.editTextOther);
-        radioButtonOther = findViewById(R.id.radioButtonOther);
-        radioButtonCurrent = findViewById(R.id.radioButtonCurrent);
-        radioGroupLocation = findViewById(R.id.radioGroupLocation);
+        editTextDistance = view.findViewById(R.id.editTextDistance);
+        editTextOther = view.findViewById(R.id.editTextOther);
+        radioButtonOther = view.findViewById(R.id.radioButtonOther);
+        radioButtonCurrent = view.findViewById(R.id.radioButtonCurrent);
+        radioGroupLocation = view.findViewById(R.id.radioGroupLocation);
         radioGroupLocation.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -75,7 +95,25 @@ public class SearchActivity extends AppCompatActivity {
                 }
             }
         });
-        textViewOtherError = findViewById(R.id.textViewOtherError);
+        textViewOtherError = view.findViewById(R.id.textViewOtherError);
+
+        buttonSearch = view.findViewById(R.id.buttonSearch);
+        buttonSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+                nearbySearch(v);
+            }
+        });
+
+        buttonClear = view.findViewById(R.id.buttonClear);
+        buttonClear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+                clearAll(v);
+            }
+        });
+
+
     }
 
     /**
@@ -109,7 +147,7 @@ public class SearchActivity extends AppCompatActivity {
         }
 
         if (!isValid) {
-            Toast.makeText(getApplicationContext(), "Please fix all fields with errors", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity().getApplicationContext(), "Please fix all fields with errors", Toast.LENGTH_SHORT).show();
         }
 
         return isValid;
@@ -124,7 +162,7 @@ public class SearchActivity extends AppCompatActivity {
             // TODO: VOLLEY DEMO
 
             // Instantiate the RequestQueue.
-            RequestQueue queue = Volley.newRequestQueue(this);
+            RequestQueue queue = Volley.newRequestQueue(getActivity().getApplicationContext());
             String url = "http://ip-api.com/json";
 
             // Request a string response from the provided URL.

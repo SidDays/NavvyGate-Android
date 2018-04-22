@@ -1,5 +1,7 @@
 package com.sidrk.travelentsearch;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -23,6 +25,11 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.sidrk.travelentsearch.models.ResultListItem;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.Arrays;
 import java.util.List;
@@ -51,6 +58,8 @@ public class SearchFragment extends Fragment {
     public SearchFragment() {
 
     }
+
+    // TODO: Add newInstance method?
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -153,30 +162,48 @@ public class SearchFragment extends Fragment {
         return isValid;
     }
 
+    /**
+     * Search button
+     * @param v
+     */
     public void nearbySearch(View v) {
 
         if (validate()) {
 
             Log.d(TAG, "Starting volley stuff...");
 
-            // TODO: VOLLEY DEMO
-
             // Instantiate the RequestQueue.
             RequestQueue queue = Volley.newRequestQueue(getActivity().getApplicationContext());
-            String url = "http://ip-api.com/json";
+
+            // Build the request
+            String url = buildRequest();
 
             // Request a string response from the provided URL.
             StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                     new Response.Listener<String>() {
                         @Override
-                        public void onResponse(String response) {
+                        public void onResponse(String responseString) {
                             // Display the first 500 characters of the response string.
-                            Log.d(TAG, "Response is: " + response);
+                            Log.v(TAG, "Response is: " + responseString);
+
+                            ResultListItem[] array = null;
+                            try {
+                                array = ResultListItem.parseResponse(responseString);
+
+                                // TODO: Start a new activity with the results
+                                Intent myIntent = new Intent(getActivity(), ResultsActivity.class);
+                                startActivity(myIntent);
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                         }
                     }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     Log.d(TAG, "That didn't work!");
+                    Log.e(TAG, error.toString());
+                    error.printStackTrace();
                 }
             });
 
@@ -186,6 +213,43 @@ public class SearchFragment extends Fragment {
         }
     }
 
+    /**
+     * Creates a request URL to the backend
+     * @return
+     */
+    private String buildRequest() {
+
+        Uri.Builder builder = Uri.parse(Constants.URL_NEARBY_SEARCH).buildUpon();
+
+        String keyword = editTextKeyword.getText().toString().trim();
+        builder.appendQueryParameter("keyword", keyword);
+
+        String category = spinnerCategory.getSelectedItem().toString().replace(" ", "_").toLowerCase();
+        builder.appendQueryParameter("category", category);
+
+        String distanceString = editTextDistance.getText().toString();
+        if(distanceString.trim().length() > 0) {
+            try {
+                float radius = Float.parseFloat(distanceString) * 1609.344f;
+                builder.appendQueryParameter("distance", String.valueOf(radius));
+            } catch (NumberFormatException e) {
+                Log.e(TAG, "Distance must be numeric.");
+                Toast.makeText(getActivity().getApplicationContext(), "Distance is non-numeric, ignoring", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        // TODO: Location
+        String other = editTextOther.getText().toString();
+
+        String url = builder.build().toString();
+        Log.d(TAG, "Generated URL: "+url);
+        return url;
+    }
+
+    /**
+     * Clears text fields and resets form controls.
+     * @param v
+     */
     public void clearAll(View v) {
 
         editTextKeyword.setText("");

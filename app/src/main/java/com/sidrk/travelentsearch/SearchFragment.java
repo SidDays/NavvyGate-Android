@@ -186,17 +186,11 @@ public class SearchFragment extends Fragment {
                             // Display the first 500 characters of the response string.
                             Log.v(TAG, "Response is: " + responseString);
 
-                            ResultListItem[] array = null;
-                            try {
-                                array = ResultListItem.parseResponse(responseString);
+                            // Start a new activity with the results
+                            Intent myIntent = new Intent(getActivity(), ResultsActivity.class);
+                            myIntent.putExtra("resultJSON", responseString);
+                            startActivity(myIntent);
 
-                                // TODO: Start a new activity with the results
-                                Intent myIntent = new Intent(getActivity(), ResultsActivity.class);
-                                startActivity(myIntent);
-
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
                         }
                     }, new Response.ErrorListener() {
                 @Override

@@ -5,8 +5,12 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 
 import com.sidrk.travelentsearch.adapters.ResultsAdapter;
+import com.sidrk.travelentsearch.models.ResultListItem;
+
+import org.json.JSONException;
 
 public class ResultsActivity extends AppCompatActivity {
 
@@ -20,8 +24,6 @@ public class ResultsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Intent intent = getIntent();
-
         setContentView(R.layout.activity_results);
         recyclerViewResults = (RecyclerView) findViewById(R.id.recyclerViewResults);
 
@@ -33,10 +35,34 @@ public class ResultsActivity extends AppCompatActivity {
         layoutManager = new LinearLayoutManager(this);
         recyclerViewResults.setLayoutManager(layoutManager);
 
-        // specify an adapter (see also next example)
-        mAdapter = new ResultsAdapter(null);
-        recyclerViewResults.setAdapter(mAdapter);
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
 
+        String responseString = null;
+        if (bundle != null) {
+            responseString = bundle.getString("resultJSON");
 
+            ResultListItem[] array = null;
+            try {
+                array = ResultListItem.parseResponse(responseString);
+
+                // specify an adapter
+                mAdapter = new ResultsAdapter(array);
+
+            } catch (JSONException e) {
+
+                // specify an adapter
+                mAdapter = new ResultsAdapter(null);
+                Log.e(TAG, "Unable to parse result response JSON string.");
+
+                e.printStackTrace();
+            }
+
+            recyclerViewResults.setAdapter(mAdapter);
+        } else {
+            Log.d(TAG, "No response string passed. Using default data");
+            mAdapter = new ResultsAdapter(null);
+            recyclerViewResults.setAdapter(mAdapter);
+        }
     }
 }

@@ -36,17 +36,26 @@ public class ResultsAdapter extends RecyclerView.Adapter<ResultsAdapter.ViewHold
         public ViewHolder(LinearLayout v) {
             super(v);
             linearLayoutSearchResult = v;
+            placeName = v.findViewById(R.id.textViewPlaceName);
+            placeAddress = v.findViewById(R.id.textViewPlaceAddress);
+            placeIcon = v.findViewById(R.id.imageViewPlaceIcon);
+            favoriteStatus = v.findViewById(R.id.imageViewFavoriteStatus);
         }
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
     public ResultsAdapter(ResultListItem[] myDataset) {
-        // TODO: Remove dummy data
+
         try {
-            dataset = ResultListItem.parseResponse(resultJSON);
+            if(myDataset == null) {
+                dataset = ResultListItem.parseResponse(resultJSON);
+            }
+            else {
+                dataset = myDataset;            }
+
         } catch (JSONException e) {
             dataset = null;
-            Log.e(TAG, "invalid JSON");
+            Log.e(TAG, "Default hardcoded JSON is invalid.");
             e.printStackTrace();
         }
 
@@ -68,11 +77,15 @@ public class ResultsAdapter extends RecyclerView.Adapter<ResultsAdapter.ViewHold
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
-        // TODO: Load contents of search results into this viewHolder
+        // Load contents of search results into this viewHolder
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        // holder.mTextView.setText(mDataset[position]);
+        ResultListItem currentResult = dataset[position];
 
+        holder.placeName.setText(currentResult.getName());
+        holder.placeAddress.setText(currentResult.getAddress());
+        holder.placeIcon.setImageResource(currentResult.getIconId());
+        holder.favoriteStatus.setImageResource(currentResult.getFavoriteStatusId());
     }
 
     // Return the size of your dataset (invoked by the layout manager)

@@ -69,7 +69,11 @@ public class MainActivity extends AppCompatActivity {
 
             // getItem is called to instantiate the fragment for the given page.
             switch (position) {
-                case 0: return new SearchFragment();
+                case 0:
+                    return new SearchFragment();
+
+                case 1:
+                    return FavoritesFragment.newInstance();
 
                 default:
                     // TODO: Remove this case
@@ -85,4 +89,5 @@ public class MainActivity extends AppCompatActivity {
             return 2;
         }
     }
+
 }

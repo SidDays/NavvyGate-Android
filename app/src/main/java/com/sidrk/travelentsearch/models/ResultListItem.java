@@ -1,22 +1,32 @@
 package com.sidrk.travelentsearch.models;
-
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import com.sidrk.travelentsearch.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class ResultListItem implements Parcelable{
-
-    // TODO: implement parcel creator etc
-    // https://developer.android.com/reference/android/os/Parcelable.html
+public class ResultListItem {
 
     private String name, address;
-    int iconId;
-    int favoriteStatusId;
+    private int iconId;
+    private int favoriteStatusId;
+
+    public String getName() {
+        return name;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public int getIconId() {
+        return iconId;
+    }
+
+    public int getFavoriteStatusId() {
+        return favoriteStatusId;
+    }
+
 
     ResultListItem() {
         this.name = "Name unspecified";
@@ -30,16 +40,6 @@ public class ResultListItem implements Parcelable{
         this.address = address;
         this.iconId = iconId;
         this.favoriteStatusId = favoriteStatusId;
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-
     }
 
     public static ResultListItem[] parseResponse(String responseString) throws JSONException {

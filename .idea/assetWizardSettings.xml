@@ -23,7 +23,6 @@
                                           <PersistentState>
                                             <option name="values">
                                               <map>
-                                                <entry key="scalingPercent" value="91" />
                                                 <entry key="trimmed" value="true" />
                                               </map>
                                             </option>
@@ -36,8 +35,6 @@
                                     <map>
                                       <entry key="backgroundImage" value="C:\Users\siddh\AndroidStudioProjects\TravelEntSearch\app\src\main\res\drawable\bg_transparent.xml" />
                                       <entry key="foregroundImage" value="C:\Users\siddh\AndroidStudioProjects\TravelEntSearch\app\src\main\res\drawable\ic_map_fancy.png" />
-                                      <entry key="generateRoundIcon" value="false" />
-                                      <entry key="generateWebIcon" value="false" />
                                       <entry key="legacyIconShape" value="NONE" />
                                     </map>
                                   </option>

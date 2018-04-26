@@ -27,7 +27,14 @@
         </activity>
         <activity
             android:name=".details.PlaceDetailsActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBUtYnr9wgF8RHtljQPfTfgo56Oc1nmps0"/>
     </application>
 
 </manifest>

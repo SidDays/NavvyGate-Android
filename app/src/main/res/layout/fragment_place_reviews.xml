@@ -27,8 +27,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:entries="@array/review_order"
-            android:spinnerMode="@array/review_order" />
+            android:entries="@array/review_order" />
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView

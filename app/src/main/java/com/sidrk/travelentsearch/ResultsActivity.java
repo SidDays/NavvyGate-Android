@@ -7,8 +7,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
-import com.sidrk.travelentsearch.adapters.ResultsAdapter;
-
 import org.json.JSONException;
 
 public class ResultsActivity extends AppCompatActivity {

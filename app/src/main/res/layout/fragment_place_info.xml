@@ -10,6 +10,7 @@
     <!-- TODO: Update blank fragment layout -->
 
     <TableRow
+        android:id="@+id/tableRowPlaceAddress"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal">
@@ -34,6 +35,7 @@
     </TableRow>
 
     <TableRow
+        android:id="@+id/tableRowPlacePhone"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal">
@@ -59,6 +61,7 @@
     </TableRow>
 
     <TableRow
+        android:id="@+id/tableRowPlacePrice"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal">
@@ -83,6 +86,7 @@
     </TableRow>
 
     <TableRow
+        android:id="@+id/tableRowPlaceRating"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal">
@@ -106,16 +110,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:numStars="5"
-                android:paddingBottom="8dp"
-                android:paddingRight="8dp"
-                android:paddingTop="8dp"
-                android:rating="4" />
+                android:numStars="5" />
         </FrameLayout>
 
     </TableRow>
 
     <TableRow
+        android:id="@+id/tableRowPlaceGPage"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal">
@@ -141,6 +142,7 @@
     </TableRow>
 
     <TableRow
+        android:id="@+id/tableRowPlaceWebsite"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal">

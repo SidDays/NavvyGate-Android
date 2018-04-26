@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
             // getItem is called to instantiate the fragment for the given page.
             switch (position) {
                 case 0:
-                    return new SearchFragment();
+                    return new SearchFragment(); // FIXME: Replace with new instance
 
                 case 1:
                     return FavoritesFragment.newInstance();

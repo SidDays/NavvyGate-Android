@@ -28,14 +28,14 @@ public class ResultListItem {
     }
 
 
-    ResultListItem() {
+    public ResultListItem() {
         this.name = "Name unspecified";
         this.address = "Address unspecified";
         this.iconId = R.drawable.place_icon_unspecified;
         this.favoriteStatusId = R.drawable.heart_fill_blue;
     }
 
-    ResultListItem(String name, String address, int iconId, int favoriteStatusId) {
+    public ResultListItem(String name, String address, int iconId, int favoriteStatusId) {
         this.name = name;
         this.address = address;
         this.iconId = iconId;

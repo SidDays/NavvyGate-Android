@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/tableLayoutPlaceInfo"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -22,6 +23,7 @@
             android:textStyle="bold" />
 
         <TextView
+            android:id="@+id/textViewPlaceAddress"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
@@ -45,13 +47,15 @@
             android:textStyle="bold" />
 
         <TextView
+            android:id="@+id/textViewPlacePhone"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
             android:paddingBottom="8dp"
             android:paddingRight="8dp"
             android:paddingTop="8dp"
-            android:text="(213) 740-2311" />
+            android:text="(213) 740-2311"
+            android:textColor="@color/colorAccent" />
     </TableRow>
 
     <TableRow
@@ -68,6 +72,7 @@
             android:textStyle="bold" />
 
         <TextView
+            android:id="@+id/textViewPlacePrice"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
@@ -90,17 +95,24 @@
             android:text="Rating"
             android:textStyle="bold" />
 
-        <RatingBar
-            android:id="@+id/ratingBar"
-            style="@style/Widget.AppCompat.RatingBar.Small"
+        <FrameLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:numStars="100"
-            android:paddingBottom="8dp"
-            android:paddingRight="8dp"
-            android:paddingTop="8dp"
-            android:rating="90" />
+            android:layout_height="match_parent"
+            android:layout_weight="2">
+
+            <RatingBar
+                android:id="@+id/ratingBarPlaceRating"
+                style="@style/Widget.AppCompat.RatingBar.Small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:numStars="5"
+                android:paddingBottom="8dp"
+                android:paddingRight="8dp"
+                android:paddingTop="8dp"
+                android:rating="4" />
+        </FrameLayout>
+
     </TableRow>
 
     <TableRow
@@ -117,13 +129,15 @@
             android:textStyle="bold" />
 
         <TextView
+            android:id="@+id/textViewPlaceGPage"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
             android:paddingBottom="8dp"
             android:paddingRight="8dp"
             android:paddingTop="8dp"
-            android:text="https://maps.google.com/" />
+            android:text="https://maps.google.com/"
+            android:textColor="@color/colorAccent" />
     </TableRow>
 
     <TableRow
@@ -140,13 +154,15 @@
             android:textStyle="bold" />
 
         <TextView
+            android:id="@+id/textViewPlaceWebsite"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
             android:paddingBottom="8dp"
             android:paddingRight="8dp"
             android:paddingTop="8dp"
-            android:text="http://usc.edu/" />
+            android:text="http://usc.edu/"
+            android:textColor="@color/colorAccent" />
     </TableRow>
 
 </TableLayout>

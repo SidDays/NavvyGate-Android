@@ -28,6 +28,9 @@ import com.sidrk.travelentsearch.details.map.PlaceMapsFragment;
 import com.sidrk.travelentsearch.details.photos.PlacePhotosFragment;
 import com.sidrk.travelentsearch.details.reviews.PlaceReviewsFragment;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class PlaceDetailsActivity extends AppCompatActivity {
 
     private static final String TAG = "PlaceDetailsActivity";
@@ -37,6 +40,10 @@ public class PlaceDetailsActivity extends AppCompatActivity {
 
     // default value for testing purposes - overwritten upon load
     private String yelpJSON = "[{\"id\":\"4P5Fb5F2Tp44OMJ2aK9wsA\",\"url\":\"https://www.yelp.com/biz/baggios-pizza-fort-lee?hrid=4P5Fb5F2Tp44OMJ2aK9wsA&adjust_creative=GZCgF3LKdEkgco10_S9Hvg&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_reviews&utm_source=GZCgF3LKdEkgco10_S9Hvg\",\"text\":\"Baggios Pizza is a solid pizza joint. Had the special which consist of two slices and a can of soda for $5. Great deal. I think you can order ant time of...\",\"rating\":4,\"time_created\":\"2018-03-19 14:17:05\",\"user\":{\"image_url\":\"https://s3-media2.fl.yelpcdn.com/photo/t1Weo_610IsaMY2nW4zWhw/o.jpg\",\"name\":\"Billy V.\"}},{\"id\":\"hfit7E_U9lwhm43IaGDfCA\",\"url\":\"https://www.yelp.com/biz/baggios-pizza-fort-lee?hrid=hfit7E_U9lwhm43IaGDfCA&adjust_creative=GZCgF3LKdEkgco10_S9Hvg&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_reviews&utm_source=GZCgF3LKdEkgco10_S9Hvg\",\"text\":\"Before reading my review, please know that I have worked in the food service industry for 3 years :\\n\\nI begged my mom to take me here every time we are in...\",\"rating\":1,\"time_created\":\"2017-11-25 18:50:15\",\"user\":{\"image_url\":\"https://s3-media1.fl.yelpcdn.com/photo/2S1jf9eE35tWMtmprqjcdg/o.jpg\",\"name\":\"Rachel P.\"}}]";
+
+    // Additional convenience fields
+    private String placeName = "Test place";
+    private String placeId = "ChIJa147K9HX3IAR-lwiGIQv9i4";
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -72,6 +79,19 @@ public class PlaceDetailsActivity extends AppCompatActivity {
 
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
+
+        try {
+            // TODO: GET JSON RESPONSE
+            JSONObject json = new JSONObject(placeDetailsJSON);
+            JSONObject result = json.getJSONObject("result");
+
+            placeName = result.getString("name");
+            placeId = result.getString("place_id");
+
+        } catch (JSONException e) {
+            Log.e(TAG, "Invalid place details response!");
+            e.printStackTrace();
+        }
 
     }
 
@@ -115,7 +135,7 @@ public class PlaceDetailsActivity extends AppCompatActivity {
             switch (position) {
 
                 case 1:
-                    return PlacePhotosFragment.newInstance(placeDetailsJSON);
+                    return PlacePhotosFragment.newInstance(placeId);
 
                 case 2:
                     return PlaceMapsFragment.newInstance(placeDetailsJSON);

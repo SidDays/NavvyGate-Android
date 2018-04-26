@@ -7,7 +7,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:paddingBottom="24dp">
+    android:paddingBottom="25dp"
+    android:paddingTop="8dp">
 
     <ImageView
         android:id="@+id/imageViewReviewerIcon"
@@ -15,6 +16,7 @@
         android:layout_height="42dp"
         android:layout_gravity="center_vertical"
         android:layout_weight="1"
+        android:scaleType="fitCenter"
         app:srcCompat="@drawable/googleg_standard_color_18" />
 
     <LinearLayout

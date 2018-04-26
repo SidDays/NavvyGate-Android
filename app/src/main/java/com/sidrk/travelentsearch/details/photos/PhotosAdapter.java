@@ -82,4 +82,11 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder
     public int getItemCount() {
         return photoMetadataBuffer.getCount();
     }
+
+    @Override
+    public void onDetachedFromRecyclerView(@NonNull RecyclerView recyclerView) {
+        super.onDetachedFromRecyclerView(recyclerView);
+
+        photoMetadataBuffer.release();
+    }
 }

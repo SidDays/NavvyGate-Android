@@ -10,9 +10,32 @@ import android.widget.TextView;
 
 import com.sidrk.travelentsearch.R;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+
 public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHolder> {
 
     private Review[] reviewsDataset;
+
+    private static final Comparator<Review> ORDER_DEFAULT = new Comparator<Review>() {
+        @Override
+        public int compare(Review o1, Review o2) {
+            return Integer.compare(o1.naturalOrder, o2.naturalOrder);
+        }
+    };
+    private static final Comparator<Review> ORDER_RATING = new Comparator<Review>() {
+        @Override
+        public int compare(Review o1, Review o2) {
+            return Float.compare(o1.rating, o2.rating);
+        }
+    };
+    private static final Comparator<Review> ORDER_RECENT = new Comparator<Review>() {
+        @Override
+        public int compare(Review o1, Review o2) {
+            return Long.compare(o1.timeStamp, o2.timeStamp);
+        }
+    };
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -77,5 +100,25 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHold
     @Override
     public int getItemCount() {
         return reviewsDataset.length;
+    }
+
+    public void sortOption(int option) {
+        switch (option) {
+            case 2:
+                Arrays.sort(reviewsDataset, ORDER_RATING);
+                break;
+            case 1:
+                Arrays.sort(reviewsDataset, Collections.<Review>reverseOrder(ORDER_RATING));
+                break;
+            case 4:
+                Arrays.sort(reviewsDataset, ORDER_RECENT);
+                break;
+            case 3:
+                Arrays.sort(reviewsDataset, Collections.<Review>reverseOrder(ORDER_RECENT));
+                break;
+            default:
+                Arrays.sort(reviewsDataset, ORDER_DEFAULT);
+        }
+        notifyDataSetChanged();
     }
 }

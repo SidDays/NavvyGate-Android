@@ -1,8 +1,5 @@
 package com.sidrk.travelentsearch.details.photos;
 
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -14,11 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.android.gms.location.places.GeoDataClient;
-import com.google.android.gms.location.places.PlaceDetectionClient;
-import com.google.android.gms.location.places.PlacePhotoMetadata;
 import com.google.android.gms.location.places.PlacePhotoMetadataBuffer;
 import com.google.android.gms.location.places.PlacePhotoMetadataResponse;
-import com.google.android.gms.location.places.PlacePhotoResponse;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -28,10 +22,9 @@ public class PlacePhotosFragment extends Fragment {
 
     private static final String TAG = "PlacePhotosFragment";
 
-    private static final String ARG_PLACE_DETAIL = "placeDetailsJSON";
+    private static final String ARG_PLACE_ID = "placeId";
 
-    private String placeDetailsJSON;
-    private String placeId = "ChIJa147K9HX3IAR-lwiGIQv9i4";
+    private String placeId;
 
     private RecyclerView recyclerViewPhotos;
     private RecyclerView.Adapter photosAdapter;
@@ -51,7 +44,7 @@ public class PlacePhotosFragment extends Fragment {
     public static PlacePhotosFragment newInstance(String param1) {
         PlacePhotosFragment fragment = new PlacePhotosFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PLACE_DETAIL, param1);
+        args.putString(ARG_PLACE_ID, param1);
         fragment.setArguments(args);
         return fragment;
     }
@@ -60,7 +53,9 @@ public class PlacePhotosFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            placeDetailsJSON = getArguments().getString(ARG_PLACE_DETAIL);
+            placeId = getArguments().getString(ARG_PLACE_ID);
+
+            // placeId = "ChIJtVNaJUS0woAR8DLqCyVlU80"; // Empty placeId for Testing
         }
     }
 

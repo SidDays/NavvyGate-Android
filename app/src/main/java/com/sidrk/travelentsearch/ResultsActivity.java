@@ -8,7 +8,6 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
 import com.sidrk.travelentsearch.adapters.ResultsAdapter;
-import com.sidrk.travelentsearch.models.ResultListItem;
 
 import org.json.JSONException;
 

@@ -26,8 +26,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".PlaceDetailsActivity"
-            android:label="@string/title_activity_place_details"
+            android:name=".details.PlaceDetailsActivity"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

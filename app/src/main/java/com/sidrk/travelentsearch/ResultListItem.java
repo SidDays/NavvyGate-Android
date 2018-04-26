@@ -1,4 +1,4 @@
-package com.sidrk.travelentsearch.models;
+package com.sidrk.travelentsearch;
 import com.sidrk.travelentsearch.R;
 
 import org.json.JSONArray;

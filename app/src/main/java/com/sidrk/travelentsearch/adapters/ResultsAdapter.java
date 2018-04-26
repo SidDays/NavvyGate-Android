@@ -9,7 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sidrk.travelentsearch.R;
-import com.sidrk.travelentsearch.models.ResultListItem;
+import com.sidrk.travelentsearch.ResultListItem;
 
 import org.json.JSONException;
 
@@ -67,7 +67,7 @@ public class ResultsAdapter extends RecyclerView.Adapter<ResultsAdapter.ViewHold
                                                         int viewType) {
         // create a new view
         LinearLayout v = (LinearLayout) LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.search_result, parent, false);
+                .inflate(R.layout.row_search_result, parent, false);
 
         ViewHolder vh = new ViewHolder(v);
         return vh;

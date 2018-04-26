@@ -1,4 +1,4 @@
-package com.sidrk.travelentsearch;
+package com.sidrk.travelentsearch.details;
 
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +14,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.sidrk.travelentsearch.R;
+import com.sidrk.travelentsearch.details.info.PlaceInfoFragment;
 
 public class PlaceDetailsActivity extends AppCompatActivity {
 
@@ -53,8 +56,6 @@ public class PlaceDetailsActivity extends AppCompatActivity {
 
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
-
-
 
     }
 

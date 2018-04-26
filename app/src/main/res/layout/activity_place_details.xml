@@ -50,7 +50,7 @@
                 android:id="@+id/tabItemMaps"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Maps" />
+                android:text="Map" />
 
             <android.support.design.widget.TabItem
                 android:id="@+id/tabItemReviews"

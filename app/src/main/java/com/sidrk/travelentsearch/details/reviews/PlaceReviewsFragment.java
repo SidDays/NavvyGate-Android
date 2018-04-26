@@ -139,7 +139,6 @@ public class PlaceReviewsFragment extends Fragment {
 
     }
 
-    // TODO:
     private Review[] prepareGoogleDataset(String responseString) {
 
         Review[] array;
@@ -168,19 +167,40 @@ public class PlaceReviewsFragment extends Fragment {
 
             Log.i(TAG, "No reviews for this place...?");
             // if reviewsJSON causes this, it has no reviews
-            // TODO: no reviews text
             array = new Review[0];
         }
 
         return array;
     }
 
-    // TODO:
     private Review[] prepareYelpDataset(String responseString) {
 
         Review[] array;
 
-        array = new Review[0];
+        try {
+            JSONArray reviewsJSON = new JSONArray(responseString);
+
+            array = new Review[reviewsJSON.length()];
+            for(int i = 0; i < reviewsJSON.length(); i++) {
+                JSONObject review = reviewsJSON.getJSONObject(i);
+                JSONObject author = review.getJSONObject("user");
+                String authorName = author.getString("name");
+                String profilePhotoURL = author.getString("image_url");
+
+                String authorURL = review.getString("url");
+                float rating = (float)review.getDouble("rating");
+                String date = review.getString("time_created");
+                String text = review.getString("text");
+
+                array[i] = new Review(i, authorName, rating, date, text, profilePhotoURL, authorURL);
+            }
+
+        } catch (JSONException e) {
+
+            Log.i(TAG, "No reviews for this place...?");
+            // if reviewsJSON causes this, it has no reviews
+            array = new Review[0];
+        }
 
         return array;
     }

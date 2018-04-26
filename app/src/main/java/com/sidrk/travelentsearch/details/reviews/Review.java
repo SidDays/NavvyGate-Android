@@ -1,5 +1,6 @@
 package com.sidrk.travelentsearch.details.reviews;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -19,6 +20,18 @@ public class Review {
         return sdf.format(date);
     }
 
+    private static long stringToTimestamp(String date) {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date dt = sdf.parse(date);
+            long epoch = dt.getTime();
+            return epoch/1000;
+        } catch(ParseException e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
     /**
      * Default constructor
      */
@@ -32,6 +45,7 @@ public class Review {
         this.reviewText = "The quick brown fox jumped over the lazy dog. Jackdaws love my red phoenix of quartz. Blah dee-blah!";
     }
 
+    // Google Reviews
     public Review(int naturalOrder, String authorName, float rating, long timeStamp, String reviewText, String authorProfilePicURL, String reviewURL) {
 
         this.naturalOrder = naturalOrder;
@@ -44,4 +58,19 @@ public class Review {
         this.reviewURL = reviewURL;
 
     }
+
+    // Yelp Reviews
+    public Review(int naturalOrder, String authorName, float rating, String date, String reviewText, String authorProfilePicURL, String reviewURL) {
+
+        this.naturalOrder = naturalOrder;
+        this.authorName = authorName;
+        this.rating = rating;
+        this.date = date;
+        this.timeStamp = stringToTimestamp(this.date);
+        this.reviewText = reviewText;
+        this.authorProfilePicURL = authorProfilePicURL;
+        this.reviewURL = reviewURL;
+
+    }
+
 }

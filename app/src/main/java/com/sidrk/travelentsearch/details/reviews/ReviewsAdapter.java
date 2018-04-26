@@ -1,7 +1,10 @@
 package com.sidrk.travelentsearch.details.reviews;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -9,6 +12,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.sidrk.travelentsearch.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -43,7 +47,7 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHold
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
         // each data item is just a string in this case
-        public LinearLayout linearLayoutReviews;
+        public LinearLayout linearLayoutReview;
         public ImageView imageViewReviewerIcon;
         public TextView textViewReviewerName;
         public RatingBar ratingBarReviewRating;
@@ -54,7 +58,7 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHold
 
             super(v);
 
-            linearLayoutReviews = v;
+            linearLayoutReview = v;
             imageViewReviewerIcon = v.findViewById(R.id.imageViewReviewerIcon);
             textViewReviewerName = v.findViewById(R.id.textViewReviewerName);
             ratingBarReviewRating = v.findViewById(R.id.ratingBarReviewRating);
@@ -85,10 +89,17 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHold
     public void onBindViewHolder(ViewHolder holder, int position) {
 
         // replace the contents of the view with that element
-        Review currentReview = reviewsDataset[position];
+        final Review currentReview = reviewsDataset[position];
 
-        // TODO: URL
-        // TODO: Image
+        holder.linearLayoutReview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_VIEW,
+                        Uri.parse(currentReview.reviewURL));
+                v.getContext().startActivity(intent);
+            }
+        });
+        Picasso.get().load(currentReview.authorProfilePicURL).into(holder.imageViewReviewerIcon);
         holder.textViewReviewerName.setText(currentReview.authorName);
         holder.ratingBarReviewRating.setNumStars(5);
         holder.ratingBarReviewRating.setRating(currentReview.rating);

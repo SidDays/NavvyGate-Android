@@ -60,10 +60,8 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
 
-        // TODO: Fetch this image
         PlacePhotoMetadata currentPhoto = photoMetadataBuffer.get(position);
-        // Get the attribution text.
-        // CharSequence attribution = currentPhoto.getAttributions();
+
         // Get a full-size bitmap for the photo.
         Task<PlacePhotoResponse> photoResponse = mGeoDataClient.getPhoto(currentPhoto);
         photoResponse.addOnCompleteListener(new OnCompleteListener<PlacePhotoResponse>() {

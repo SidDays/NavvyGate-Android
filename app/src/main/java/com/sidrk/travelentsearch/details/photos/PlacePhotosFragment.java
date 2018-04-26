@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.google.android.gms.location.places.GeoDataClient;
 import com.google.android.gms.location.places.PlacePhotoMetadataBuffer;
@@ -26,6 +27,7 @@ public class PlacePhotosFragment extends Fragment {
 
     private String placeId;
 
+    private TextView textViewPhotosEmpty;
     private RecyclerView recyclerViewPhotos;
     private RecyclerView.Adapter photosAdapter;
     private RecyclerView.LayoutManager photosLayoutManager;
@@ -70,6 +72,7 @@ public class PlacePhotosFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        textViewPhotosEmpty = (TextView) view.findViewById(R.id.textViewPhotosEmpty);
         recyclerViewPhotos = (RecyclerView) view.findViewById(R.id.recyclerViewPhotos);
         recyclerViewPhotos.setHasFixedSize(true);
         photosLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
@@ -95,8 +98,16 @@ public class PlacePhotosFragment extends Fragment {
                 // Get the PlacePhotoMetadataBuffer (metadata for all of the photos).
                 PlacePhotoMetadataBuffer photoMetadataBuffer = photos.getPhotoMetadata();
 
-                photosAdapter = new PhotosAdapter(photoMetadataBuffer, mGeoDataClient);
-                recyclerViewPhotos.setAdapter(photosAdapter);
+                if(photoMetadataBuffer.getCount() > 0) {
+                    textViewPhotosEmpty.setVisibility(View.GONE);
+                    recyclerViewPhotos.setVisibility(View.VISIBLE);
+                    photosAdapter = new PhotosAdapter(photoMetadataBuffer, mGeoDataClient);
+                    recyclerViewPhotos.setAdapter(photosAdapter);
+                } else {
+                    textViewPhotosEmpty.setVisibility(View.VISIBLE);
+                    recyclerViewPhotos.setVisibility(View.GONE);
+                }
+
 
             }
         });

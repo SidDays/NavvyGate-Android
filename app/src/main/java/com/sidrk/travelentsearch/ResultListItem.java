@@ -9,7 +9,19 @@ public class ResultListItem {
 
     private String name, address;
     private int iconId;
+
+    public String getPlaceId() {
+        return placeId;
+    }
+
+    private String placeId;
     private int favoriteStatusId;
+
+    public String getIconURL() {
+        return iconURL;
+    }
+
+    private String iconURL;
 
     public String getName() {
         return name;
@@ -29,16 +41,18 @@ public class ResultListItem {
 
 
     public ResultListItem() {
+        this.placeId = "";
         this.name = "Name unspecified";
         this.address = "Address unspecified";
-        this.iconId = R.drawable.place_icon_unspecified;
-        this.favoriteStatusId = R.drawable.heart_fill_blue;
+        this.iconId = R.drawable.place_icon_generic;
+        this.favoriteStatusId = R.drawable.heart_outline_black;
     }
 
-    public ResultListItem(String name, String address, int iconId, int favoriteStatusId) {
+    public ResultListItem(String placeid, String name, String address, String iconUrl, int favoriteStatusId) {
+        this.placeId = placeid;
         this.name = name;
         this.address = address;
-        this.iconId = iconId;
+        this.iconURL = iconUrl;
         this.favoriteStatusId = favoriteStatusId;
     }
 
@@ -64,8 +78,9 @@ public class ResultListItem {
         String name = result.getString("name");
         String address = result.getString("vicinity");
         String iconUrl = result.getString("icon");
+        String placeid = result.getString("place_id");
 
-        ResultListItem item = new ResultListItem(name, address, R.drawable.place_icon_unspecified, R.drawable.heart_fill_white);
+        ResultListItem item = new ResultListItem(placeid, name, address, iconUrl, R.drawable.heart_outline_black);
 
         return item;
     }

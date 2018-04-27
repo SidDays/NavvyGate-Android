@@ -1,40 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="8dp">
+    android:layout_height="match_parent">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerViewResults"
+    <TextView
+        android:id="@+id/textViewResultsEmpty"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:padding="8dp"
-        android:scrollbars="vertical">
-
-    </android.support.v7.widget.RecyclerView>
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="No results"
+        android:visibility="gone" />
 
     <LinearLayout
-        android:id="@+id/linearLayoutResultsPagination"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="0"
-        android:orientation="horizontal">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="8dp">
 
-        <Button
-            android:id="@+id/buttonPreviousResults"
-            android:layout_height="wrap_content"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerViewResults"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
             android:layout_weight="1"
-            android:text="Previous" />
+            android:padding="8dp"
+            android:scrollbars="vertical">
 
-        <Button
-            android:id="@+id/buttonNextResults"
+        </android.support.v7.widget.RecyclerView>
+
+        <LinearLayout
+            android:id="@+id/linearLayoutResultsPagination"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Next" />
+            android:layout_weight="0"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/buttonPreviousResults"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:enabled="false"
+                android:text="Previous" />
+
+            <Button
+                android:id="@+id/buttonNextResults"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:enabled="false"
+                android:text="Next" />
+        </LinearLayout>
+
     </LinearLayout>
-</LinearLayout>
+
+</FrameLayout>

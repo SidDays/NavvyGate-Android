@@ -88,15 +88,15 @@
         android:textColor="?attr/colorError"
         android:visibility="gone" />
 
-    <EditText
-        android:id="@+id/editTextOther"
+    <com.seatgeek.placesautocomplete.PlacesAutocompleteTextView
+        android:id="@+id/placesAutoCompleteTextViewOther"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="32dp"
         android:ems="10"
         android:enabled="false"
         android:hint="Type in the location"
-        android:inputType="textPersonName" />
+        app:pacv_googleMapsApiKey="AIzaSyBEJAlDL5UW22NwX5jhRh3yEFkbmGAzVDs"/>
 
     <LinearLayout
         android:layout_width="match_parent"

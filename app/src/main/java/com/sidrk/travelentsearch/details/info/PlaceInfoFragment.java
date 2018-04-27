@@ -101,7 +101,7 @@ public class PlaceInfoFragment extends Fragment {
 
         // phone
         try {
-            String phone = result.getString("formatted_phone_number");
+            String phone = result.getString("international_phone_number");
             tableRowPhone.setVisibility(View.VISIBLE);
             textViewPhone.setText(phone);
             Linkify.addLinks(textViewPhone, Linkify.PHONE_NUMBERS);

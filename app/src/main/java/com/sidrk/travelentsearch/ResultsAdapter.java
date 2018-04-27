@@ -1,12 +1,25 @@
 package com.sidrk.travelentsearch;
 
+import android.app.ProgressDialog;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.sidrk.travelentsearch.details.PlaceDetailsActivity;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 
@@ -29,6 +42,7 @@ public class ResultsAdapter extends RecyclerView.Adapter<ResultsAdapter.ViewHold
         public TextView placeAddress;
         public ImageView placeIcon;
         public ImageView favoriteStatus;
+        public LinearLayout linearLayoutPlaceClick;
 
         public ViewHolder(LinearLayout v) {
             super(v);
@@ -36,6 +50,7 @@ public class ResultsAdapter extends RecyclerView.Adapter<ResultsAdapter.ViewHold
             placeAddress = v.findViewById(R.id.textViewPlaceAddress);
             placeIcon = v.findViewById(R.id.imageViewPlaceIcon);
             favoriteStatus = v.findViewById(R.id.imageViewFavoriteStatus);
+            linearLayoutPlaceClick = v.findViewById(R.id.linearLayoutPlaceClick);
         }
     }
 
@@ -47,7 +62,8 @@ public class ResultsAdapter extends RecyclerView.Adapter<ResultsAdapter.ViewHold
                 dataset = ResultListItem.parseResponse(resultJSON);
             }
             else {
-                dataset = myDataset;            }
+                dataset = myDataset;
+            }
 
         } catch (JSONException e) {
             dataset = null;
@@ -76,12 +92,70 @@ public class ResultsAdapter extends RecyclerView.Adapter<ResultsAdapter.ViewHold
         // Load contents of search results into this viewHolder
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        ResultListItem currentResult = dataset[position];
+        final ResultListItem currentResult = dataset[position];
 
         holder.placeName.setText(currentResult.getName());
         holder.placeAddress.setText(currentResult.getAddress());
-        holder.placeIcon.setImageResource(currentResult.getIconId());
+        String iconURL = currentResult.getIconURL();
+        Picasso.get().load(iconURL).into(holder.placeIcon);
         holder.favoriteStatus.setImageResource(currentResult.getFavoriteStatusId());
+        holder.linearLayoutPlaceClick.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                // TODO call place details api
+                final Uri.Builder builder = Uri.parse(Constants.URL_PLACE_DETAILS).buildUpon();
+                builder.appendQueryParameter("placeId", currentResult.getPlaceId());
+                String url = builder.build().toString();
+                Log.d(TAG, "Generated URL for place details: " + url);
+
+                callRequest(url, v);
+
+            }
+        });
+    }
+
+    private ProgressDialog dialog;
+    private void callRequest(String url, final View v) {
+
+        dialog = new ProgressDialog(v.getContext());
+        dialog.setMessage("Fetching results");
+        dialog.show();
+
+        // Instantiate the RequestQueue.
+        RequestQueue queue = Volley.newRequestQueue(v.getContext());
+
+        // Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String responseString) {
+
+                        if(dialog.isShowing()) { dialog.dismiss(); }
+
+                        // Display the first 500 characters of the response string.
+                        Log.v(TAG, "Response is: " + responseString);
+
+                        // Start a new activity with the results
+                        Intent myIntent = new Intent(v.getContext(), PlaceDetailsActivity.class);
+                        myIntent.putExtra("resultJSON", responseString);
+                        v.getContext().startActivity(myIntent);
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+                if(dialog.isShowing()) { dialog.dismiss(); }
+
+                Log.d(TAG, "That didn't work!");
+                Log.e(TAG, error.toString());
+                error.printStackTrace();
+            }
+        });
+
+        // Add the request to the RequestQueue.
+        queue.add(stringRequest);
     }
 
     // Return the size of your dataset (invoked by the layout manager)

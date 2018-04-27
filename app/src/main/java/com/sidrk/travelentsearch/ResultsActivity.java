@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
 
 import org.json.JSONException;
 
@@ -16,13 +18,17 @@ public class ResultsActivity extends AppCompatActivity {
     private RecyclerView recyclerViewResults;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
+    private TextView textViewResultsEmpty;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         setContentView(R.layout.activity_results);
         recyclerViewResults = (RecyclerView) findViewById(R.id.recyclerViewResults);
+        textViewResultsEmpty = findViewById(R.id.textViewResultsEmpty);
 
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
@@ -42,9 +48,14 @@ public class ResultsActivity extends AppCompatActivity {
             ResultListItem[] array = null;
             try {
                 array = ResultListItem.parseResponse(responseString);
+                if(array.length > 0) {
 
-                // specify an adapter
-                mAdapter = new ResultsAdapter(array);
+                    textViewResultsEmpty.setVisibility(View.GONE);
+                    // specify an adapter
+                    mAdapter = new ResultsAdapter(array);
+                } else {
+                    textViewResultsEmpty.setVisibility(View.VISIBLE);
+                }
 
             } catch (JSONException e) {
 
@@ -62,4 +73,17 @@ public class ResultsActivity extends AppCompatActivity {
             recyclerViewResults.setAdapter(mAdapter);
         }
     }
+
+    @Override
+    public boolean onSupportNavigateUp(){
+        finish();
+        return true;
+    }
+
+    @Override
+    public boolean onNavigateUp(){
+        finish();
+        return true;
+    }
+
 }

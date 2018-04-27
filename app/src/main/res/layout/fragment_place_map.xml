@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/linearLayoutPlaceMap"
     android:layout_width="match_parent"
@@ -15,13 +16,14 @@
         android:layout_height="wrap_content"
         android:text="From" />
 
-    <EditText
-        android:id="@+id/editTextMapLocation"
+    <com.seatgeek.placesautocomplete.PlacesAutocompleteTextView
+        android:id="@+id/placesAutoCompleteTextViewMapLocation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="Type in the Location"
-        android:inputType="textPersonName" />
+        android:inputType="textPersonName"
+        app:pacv_googleMapsApiKey="AIzaSyBEJAlDL5UW22NwX5jhRh3yEFkbmGAzVDs" />
 
     <TextView
         android:layout_width="match_parent"

@@ -1,6 +1,9 @@
 package com.sidrk.travelentsearch;
 
+import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -25,6 +28,15 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.seatgeek.placesautocomplete.PlacesAutocompleteTextView;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.Arrays;
 import java.util.List;
@@ -42,13 +54,15 @@ public class SearchFragment extends Fragment {
     private TextView textViewKeywordError;
     private Spinner spinnerCategory;
     private EditText editTextDistance;
-    private EditText editTextOther;
+    private PlacesAutocompleteTextView placesAutocompleteTextViewOther;
     private RadioGroup radioGroupLocation;
     private RadioButton radioButtonCurrent;
     private RadioButton radioButtonOther;
     private TextView textViewOtherError;
     private Button buttonSearch;
     private Button buttonClear;
+
+    private FusedLocationProviderClient mFusedLocationClient;
 
     public SearchFragment() {
 
@@ -67,6 +81,8 @@ public class SearchFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity().getApplicationContext());
+
         editTextKeyword = view.findViewById(R.id.editTextKeyword);
         textViewKeywordError = view.findViewById(R.id.textViewKeywordError);
 
@@ -78,7 +94,7 @@ public class SearchFragment extends Fragment {
         sItems.setAdapter(spinnerAdapter);
 
         editTextDistance = view.findViewById(R.id.editTextDistance);
-        editTextOther = view.findViewById(R.id.editTextOther);
+        placesAutocompleteTextViewOther = view.findViewById(R.id.placesAutoCompleteTextViewOther);
         radioButtonOther = view.findViewById(R.id.radioButtonOther);
         radioButtonCurrent = view.findViewById(R.id.radioButtonCurrent);
         radioGroupLocation = view.findViewById(R.id.radioGroupLocation);
@@ -88,11 +104,11 @@ public class SearchFragment extends Fragment {
                 // checkedId is the RadioButton selected
                 switch (checkedId) {
                     case R.id.radioButtonCurrent:
-                        editTextOther.setEnabled(false);
+                        placesAutocompleteTextViewOther.setEnabled(false);
                         textViewOtherError.setVisibility(View.GONE);
                         break;
                     case R.id.radioButtonOther:
-                        editTextOther.setEnabled(true);
+                        placesAutocompleteTextViewOther.setEnabled(true);
                         break;
                     default:
                         Log.e(TAG, "Unknown radio button selected!");
@@ -137,7 +153,7 @@ public class SearchFragment extends Fragment {
             textViewKeywordError.setVisibility(View.GONE);
         }
 
-        String other = editTextOther.getText().toString();
+        String other = placesAutocompleteTextViewOther.getText().toString();
         if (radioButtonOther.isChecked()) {
 
             if (other.trim().length() == 0) {
@@ -159,6 +175,7 @@ public class SearchFragment extends Fragment {
 
     /**
      * Search button
+     *
      * @param v
      */
     public void nearbySearch(View v) {
@@ -167,29 +184,80 @@ public class SearchFragment extends Fragment {
 
             Log.d(TAG, "Starting volley stuff...");
 
-            // Instantiate the RequestQueue.
-            RequestQueue queue = Volley.newRequestQueue(getActivity().getApplicationContext());
+
 
             // Build the request
-            String url = buildRequest();
+            buildAndExecuteRequestUrl();
 
-            // Request a string response from the provided URL.
-            StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+        }
+    }
+
+    /**
+     * Creates a request URL to the backend
+     *
+     * @return
+     */
+    @SuppressLint("MissingPermission")
+    private void buildAndExecuteRequestUrl() {
+
+        final Uri.Builder builder = Uri.parse(Constants.URL_NEARBY_SEARCH).buildUpon();
+
+        String keyword = editTextKeyword.getText().toString().trim();
+        builder.appendQueryParameter("keyword", keyword);
+
+        String category = spinnerCategory.getSelectedItem().toString().replace(" ", "_").toLowerCase();
+        builder.appendQueryParameter("category", category);
+
+        String distanceString = editTextDistance.getText().toString();
+        if (distanceString.trim().length() > 0) {
+            try {
+                float radius = Float.parseFloat(distanceString) * 1609.344f;
+                builder.appendQueryParameter("distance", String.valueOf(radius));
+            } catch (NumberFormatException e) {
+                Log.e(TAG, "Distance must be numeric.");
+                Toast.makeText(getActivity().getApplicationContext(), "Distance is non-numeric, ignoring", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        if (radioButtonOther.isChecked()) {
+            String other = placesAutocompleteTextViewOther.getText().toString();
+
+            // TODO: Location
+            final Uri.Builder builderGeocode = Uri.parse(Constants.URL_GEOCODE).buildUpon();
+            builderGeocode.appendQueryParameter("address", other);
+            String urlGeocode = builderGeocode.build().toString();
+
+            RequestQueue queue = Volley.newRequestQueue(getActivity().getApplicationContext());
+            StringRequest stringRequest = new StringRequest(Request.Method.GET, urlGeocode,
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String responseString) {
-                            // Display the first 500 characters of the response string.
+
                             Log.v(TAG, "Response is: " + responseString);
 
-                            // Start a new activity with the results
-                            Intent myIntent = new Intent(getActivity(), ResultsActivity.class);
-                            myIntent.putExtra("resultJSON", responseString);
-                            startActivity(myIntent);
+                            try {
+                                JSONObject locationJSON = new JSONObject(responseString)
+                                        .getJSONArray("results")
+                                        .getJSONObject(0)
+                                        .getJSONObject("geometry")
+                                        .getJSONObject("location");
+
+                                String location = locationJSON.getDouble("lat")+","+locationJSON.getDouble("lng");
+                                builder.appendQueryParameter("location", location);
+                                String url = builder.build().toString();
+                                Log.d(TAG, "Generated URL via geocode: " + url);
+
+                                callRequest(url);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
 
                         }
                     }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
+
+
                     Log.d(TAG, "That didn't work!");
                     Log.e(TAG, error.toString());
                     error.printStackTrace();
@@ -200,43 +268,93 @@ public class SearchFragment extends Fragment {
             queue.add(stringRequest);
 
         }
-    }
+        else {
+            mFusedLocationClient.getLastLocation()
+                    .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
+                        @Override
+                        public void onSuccess(Location location) {
+                            // Got last known location. In some rare situations this can be null.
+                            Double lat = 34.007889;
+                            Double lng= -118.2585096;
 
-    /**
-     * Creates a request URL to the backend
-     * @return
-     */
-    private String buildRequest() {
+                            if (location != null) {
+                                // Logic to handle location object
+                                lat = location.getLatitude();
+                                lng = location.getLongitude();
+                            }
+                            Log.e(TAG, "Location is null");
+                            builder.appendQueryParameter("location", lat+","+lng);
 
-        Uri.Builder builder = Uri.parse(Constants.URL_NEARBY_SEARCH).buildUpon();
+                            String url = builder.build().toString();
+                            Log.d(TAG, "Generated URL via device location: " + url);
 
-        String keyword = editTextKeyword.getText().toString().trim();
-        builder.appendQueryParameter("keyword", keyword);
+                            callRequest(url);
+                        }
+                    }).addOnFailureListener(getActivity(), new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    e.printStackTrace();
+                    Double lat = 34.007889;
+                    Double lng= -118.2585096;
+                    Log.e(TAG, "Location detect failed");
+                    builder.appendQueryParameter("location", lat+","+lng);
 
-        String category = spinnerCategory.getSelectedItem().toString().replace(" ", "_").toLowerCase();
-        builder.appendQueryParameter("category", category);
+                    String url = builder.build().toString();
+                    Log.d(TAG, "Generated URL via device location: " + url);
 
-        String distanceString = editTextDistance.getText().toString();
-        if(distanceString.trim().length() > 0) {
-            try {
-                float radius = Float.parseFloat(distanceString) * 1609.344f;
-                builder.appendQueryParameter("distance", String.valueOf(radius));
-            } catch (NumberFormatException e) {
-                Log.e(TAG, "Distance must be numeric.");
-                Toast.makeText(getActivity().getApplicationContext(), "Distance is non-numeric, ignoring", Toast.LENGTH_SHORT).show();
-            }
+                    callRequest(url);
+                }
+            });
         }
 
-        // TODO: Location
-        String other = editTextOther.getText().toString();
+    }
 
-        String url = builder.build().toString();
-        Log.d(TAG, "Generated URL: "+url);
-        return url;
+    private ProgressDialog dialog;
+    private void callRequest(String url) {
+
+        dialog = new ProgressDialog(getActivity());
+        dialog.setMessage("Fetching results");
+        dialog.show();
+
+        // Instantiate the RequestQueue.
+        RequestQueue queue = Volley.newRequestQueue(getActivity().getApplicationContext());
+
+        // Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String responseString) {
+
+                        if(dialog.isShowing()) { dialog.dismiss(); }
+
+                        // Display the first 500 characters of the response string.
+                        Log.v(TAG, "Response is: " + responseString);
+
+                        // Start a new activity with the results
+                        Intent myIntent = new Intent(getActivity(), ResultsActivity.class);
+                        myIntent.putExtra("resultJSON", responseString);
+                        startActivity(myIntent);
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+                if(dialog.isShowing()) { dialog.dismiss(); }
+
+                Log.d(TAG, "That didn't work!");
+                Log.e(TAG, error.toString());
+                error.printStackTrace();
+            }
+        });
+
+        // Add the request to the RequestQueue.
+        queue.add(stringRequest);
     }
 
     /**
      * Clears text fields and resets form controls.
+     *
      * @param v
      */
     public void clearAll(View v) {
@@ -244,7 +362,7 @@ public class SearchFragment extends Fragment {
         editTextKeyword.setText("");
         editTextDistance.setText("");
         radioGroupLocation.check(R.id.radioButtonCurrent);
-        editTextOther.setText("");
+        placesAutocompleteTextViewOther.setText("");
         textViewOtherError.setVisibility(View.GONE);
         textViewKeywordError.setVisibility(View.GONE);
         spinnerCategory.setSelection(0);

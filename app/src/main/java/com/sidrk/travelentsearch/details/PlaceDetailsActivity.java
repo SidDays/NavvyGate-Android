@@ -4,6 +4,7 @@ import com.google.android.gms.location.places.GeoDataClient;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.PlaceDetectionClient;
 
+import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -44,6 +45,8 @@ public class PlaceDetailsActivity extends AppCompatActivity {
     // Additional convenience fields
     private String placeName = "Test place";
     private String placeId = "ChIJa147K9HX3IAR-lwiGIQv9i4";
+    private double placeLat = 34.007889, placeLng = -118.2585096; // USC
+    private Toolbar mActionBarToolbar;
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -82,11 +85,25 @@ public class PlaceDetailsActivity extends AppCompatActivity {
 
         try {
             // TODO: GET JSON RESPONSE
+            Intent intent = getIntent();
+            Bundle bundle = intent.getExtras();
+            if (bundle != null) {
+                placeDetailsJSON = bundle.getString("resultJSON");
+            }
             JSONObject json = new JSONObject(placeDetailsJSON);
+
             JSONObject result = json.getJSONObject("result");
 
             placeName = result.getString("name");
+            mActionBarToolbar = (Toolbar) findViewById(R.id.toolbar);
+            setSupportActionBar(mActionBarToolbar);
+            getSupportActionBar().setTitle(placeName);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
             placeId = result.getString("place_id");
+            JSONObject location = result.getJSONObject("geometry").getJSONObject("location");
+            placeLat = location.getDouble("lat");
+            placeLng = location.getDouble("lng");
 
         } catch (JSONException e) {
             Log.e(TAG, "Invalid place details response!");
@@ -94,7 +111,6 @@ public class PlaceDetailsActivity extends AppCompatActivity {
         }
 
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -118,6 +134,18 @@ public class PlaceDetailsActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public boolean onSupportNavigateUp(){
+        finish();
+        return true;
+    }
+
+    @Override
+    public boolean onNavigateUp(){
+        finish();
+        return true;
+    }
+
 
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
@@ -138,7 +166,7 @@ public class PlaceDetailsActivity extends AppCompatActivity {
                     return PlacePhotosFragment.newInstance(placeId);
 
                 case 2:
-                    return PlaceMapsFragment.newInstance(placeDetailsJSON);
+                    return PlaceMapsFragment.newInstance(placeName, placeLat, placeLng);
 
                 case 3:
                     return PlaceReviewsFragment.newInstance(placeDetailsJSON, yelpJSON);

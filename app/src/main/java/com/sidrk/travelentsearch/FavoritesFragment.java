@@ -3,24 +3,23 @@ package com.sidrk.travelentsearch;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link FavoritesFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link FavoritesFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class FavoritesFragment extends Fragment {
 
-    // TODO: Rename and change types of parameters
-//    private String mParam1;
+    private RecyclerView recyclerViewFavorites;
+    private TextView textViewFavoritesEmpty;
+    public static FavoritesAdapter mAdapter = new FavoritesAdapter();
+    private RecyclerView.LayoutManager layoutManager;
 
     public FavoritesFragment() {
         // Required empty public constructor
@@ -55,6 +54,33 @@ public class FavoritesFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_favorites, container, false);
+
     }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        textViewFavoritesEmpty = view.findViewById(R.id.textViewFavoritesEmpty);
+
+        if(FavoritesFragment.mAdapter.getItemCount() == 0) {
+            textViewFavoritesEmpty.setVisibility(View.VISIBLE);
+        }
+        else {
+            textViewFavoritesEmpty.setVisibility(View.GONE);
+        }
+
+        recyclerViewFavorites = view.findViewById(R.id.recyclerViewFavorites);
+
+
+        // use this setting to improve performance if you know that changes
+        // in content do not change the layout size of the RecyclerView
+        recyclerViewFavorites.setHasFixedSize(true);
+
+        // use a linear layout manager
+        layoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
+        recyclerViewFavorites.setLayoutManager(layoutManager);
+
+        recyclerViewFavorites.setAdapter(mAdapter);
+    }
 }

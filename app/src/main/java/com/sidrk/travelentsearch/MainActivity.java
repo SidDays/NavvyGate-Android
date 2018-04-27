@@ -10,6 +10,9 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -46,6 +49,18 @@ public class MainActivity extends AppCompatActivity {
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout.getTabAt(0).setCustomView(R.layout.tab_icon);
+        tabLayout.getTabAt(1).setCustomView(R.layout.tab_icon);
+        View tab1_view = tabLayout.getTabAt(0).getCustomView();
+        View tab2_view = tabLayout.getTabAt(1).getCustomView();
+        TextView tab1_title = (TextView) tab1_view.findViewById(R.id.textViewTab);
+        ImageView img1 = (ImageView) tab1_view.findViewById(R.id.imageViewTab);
+        TextView tab2_title = (TextView) tab2_view.findViewById(R.id.textViewTab);
+        ImageView img2 = (ImageView) tab2_view.findViewById(R.id.imageViewTab);
+        tab1_title.setText("Search");
+        img1.setImageResource(R.drawable.search);
+        tab2_title.setText("Favorites");
+        img2.setImageResource(R.drawable.heart_fill_white);
 
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));

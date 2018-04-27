@@ -21,6 +21,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.sidrk.travelentsearch.FavoritesFragment;
 import com.sidrk.travelentsearch.R;
@@ -82,6 +84,33 @@ public class PlaceDetailsActivity extends AppCompatActivity {
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout.getTabAt(0).setCustomView(R.layout.tab_icon);
+        tabLayout.getTabAt(1).setCustomView(R.layout.tab_icon);
+        tabLayout.getTabAt(2).setCustomView(R.layout.tab_icon);
+        tabLayout.getTabAt(3).setCustomView(R.layout.tab_icon);
+        View tab1_view = tabLayout.getTabAt(0).getCustomView();
+        View tab2_view = tabLayout.getTabAt(1).getCustomView();
+        View tab3_view = tabLayout.getTabAt(2).getCustomView();
+        View tab4_view = tabLayout.getTabAt(3).getCustomView();
+        TextView tab1_title = (TextView) tab1_view.findViewById(R.id.textViewTab);
+        ImageView img1 = (ImageView) tab1_view.findViewById(R.id.imageViewTab);
+        TextView tab2_title = (TextView) tab2_view.findViewById(R.id.textViewTab);
+        ImageView img2 = (ImageView) tab2_view.findViewById(R.id.imageViewTab);
+        TextView tab3_title = (TextView) tab3_view.findViewById(R.id.textViewTab);
+        ImageView img3 = (ImageView) tab3_view.findViewById(R.id.imageViewTab);
+        TextView tab4_title = (TextView) tab4_view.findViewById(R.id.textViewTab);
+        ImageView img4 = (ImageView) tab4_view.findViewById(R.id.imageViewTab);
+        tab1_title.setText("Info");
+        img1.setImageResource(R.drawable.info_outline);
+
+        tab2_title.setText("Photos");
+        img2.setImageResource(R.drawable.photos);
+
+        tab3_title.setText("Map");
+        img3.setImageResource(R.drawable.maps);
+
+        tab4_title.setText("Reviews");
+        img4.setImageResource(R.drawable.review);
 
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));

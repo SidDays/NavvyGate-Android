@@ -5,6 +5,7 @@ import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.PlaceDetectionClient;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -45,6 +46,8 @@ public class PlaceDetailsActivity extends AppCompatActivity {
     // Additional convenience fields
     private String placeName = "Test place";
     private String placeId = "ChIJa147K9HX3IAR-lwiGIQv9i4";
+    private String placeAddress = "someplace nice";
+    private String placeWebsite = "http://www.example.com";
     private double placeLat = 34.007889, placeLng = -118.2585096; // USC
     private Toolbar mActionBarToolbar;
 
@@ -104,6 +107,8 @@ public class PlaceDetailsActivity extends AppCompatActivity {
             JSONObject location = result.getJSONObject("geometry").getJSONObject("location");
             placeLat = location.getDouble("lat");
             placeLng = location.getDouble("lng");
+            placeAddress = result.getString("formatted_address");
+            placeWebsite = result.getString("website");
 
         } catch (JSONException e) {
             Log.e(TAG, "Invalid place details response!");
@@ -127,7 +132,18 @@ public class PlaceDetailsActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_share) {
+
+            String text = "Check out "+placeName+" located at "+placeAddress+". Website: ";
+            String url = "http://www.twitter.com/intent/tweet?url="+placeWebsite+"&text="+text;
+            Intent i = new Intent(Intent.ACTION_VIEW);
+            i.setData(Uri.parse(url));
+            startActivity(i);
+
+            Log.d(TAG, "Twitter action");
+            return true;
+        }
+        else if (id == R.id.action_favorite) {
             return true;
         }
 

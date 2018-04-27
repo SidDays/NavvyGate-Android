@@ -87,7 +87,7 @@ public class ResultsAdapter extends RecyclerView.Adapter<ResultsAdapter.ViewHold
 
     // Replace the contents of a view (invoked by the layout manager)
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
 
         // Load contents of search results into this viewHolder
         // - get element from your dataset at this position
@@ -99,6 +99,13 @@ public class ResultsAdapter extends RecyclerView.Adapter<ResultsAdapter.ViewHold
         String iconURL = currentResult.getIconURL();
         Picasso.get().load(iconURL).into(holder.placeIcon);
         holder.favoriteStatus.setImageResource(currentResult.getFavoriteStatusId());
+        holder.favoriteStatus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                holder.favoriteStatus.setImageResource(R.drawable.heart_fill_red);
+            }
+        });
+
         holder.linearLayoutPlaceClick.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

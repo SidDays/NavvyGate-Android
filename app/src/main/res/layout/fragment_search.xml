@@ -20,7 +20,7 @@
         android:ems="10"
         android:hint="Enter Keyword"
         android:inputType="text"
-        android:text="Pizza" />
+        android:text="" />
 
     <TextView
         android:id="@+id/textViewKeywordError"
